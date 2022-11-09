@@ -69,8 +69,7 @@ nodemon index.js
 ```
 if you run the app in development mode.
 
-And then open this link to browser  http://localhost:8000 
-
+And then open this link to browser  http://localhost:8000 and use this account to login. 
 ```
 username: admin
 password: admin

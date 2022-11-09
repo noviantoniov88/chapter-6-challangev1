@@ -2,7 +2,7 @@
     {
         "id":1,
         "username": "superdmin",
-        "password": "$2a$12$09UQtf5eNI.UQ047jQ8hteol/4PDF/G56GqPJLneXN0DjJ4VedRK6",
+        "password": "$2a$12$09UQtf5eNI.UQ047jQ8hteol/4PDF/G56GqPJLneXN0DjJ4VedRK6", 
         "email": "superadmin@admin.com",
         "name": "Super Admin",
         "phone": "+620812345679"

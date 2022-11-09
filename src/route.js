@@ -3,8 +3,8 @@ const bcrypt = require("bcrypt");
 const { addHours, addMinutes } = require("date-fns");
 
 const db = require("./db/users.json");
-const { isAuthenticated } = require("./middleware");
-const { generateToken } = require("./utils/common");
+// const { isAuthenticated } = require("./middleware");
+// const { generateToken } = require("./utils/common");
 const route = express.Router();
 
 
@@ -37,37 +37,20 @@ route.post(
     next();
   },
   (req, res) => {
-    const { username, email } = req.user; // Destructure
 
-    const loggedInAt = Date.now();
-    const accessToken = generateToken({
-      loggedInAt,
-      user: { username, email },
-    });
-    const accessTokenExpiredAt = addHours(loggedInAt, 1);
-    const refreshToken = generateToken({
-      loggedInAt,
-    });
-    const refreshTokenExpiredAt = addMinutes(loggedInAt, 50);
-
-    res.json({
-      accessToken,
-      accessTokenExpiredAt,
-      refreshToken,
-      refreshTokenExpiredAt,
-    });
+    res.redirect("/Admin");
   }
 );
 
 // Protected Endpoint
-route.get("/me", isAuthenticated, (req, res) => {
-  req.log.info("Start getting user information");
-  const user = db.find((user) => user.username === req.session.user.username);
-  res.json(user);
-});
-route.get("/users", isAuthenticated, (req, res) => {
-  res.json(db);
-});
+// route.get("/me", isAuthenticated, (req, res) => {
+//   req.log.info("Start getting user information");
+//   const user = db.find((user) => user.username === req.session.user.username);
+//   res.json(user);
+// });
+// route.get("/users", isAuthenticated, (req, res) => {
+//   res.json(db);
+// });
 
 
 
