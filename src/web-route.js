@@ -36,7 +36,7 @@ webRoute.post(
       // Compare password
       const isValid = bcrypt.compareSync(password, user.password);
       if (!isValid) {
-        return res.redirect("auth/formError")
+        return res.redirect("/auth/formError")
       }
       next();
     },
