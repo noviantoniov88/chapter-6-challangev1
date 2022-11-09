@@ -1,61 +1,89 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const { addHours, addMinutes } = require("date-fns");
 
-const db = require("./db/users.json");
-// const { isAuthenticated } = require("./middleware");
-// const { generateToken } = require("./utils/common");
+const { Usergame, Userbiodata } = require("./models");
 const route = express.Router();
 
-
+// insert User
 route.post(
-  "/auth/login",
-  (req, res, next) => {
-    const { username, password } = req.body;
+  "/user",
+  async (req, res)=> {
+  const { firstname, lastname, username, email, phone, address, passwordP } = req.body;
 
-    // Make sure username & password are filled
-    if (!username && !password) {
-      return res
-        .status(401)
-        .json({ error: "Bad Request! Username and password are required." });
-    }
+  const salt = bcrypt.genSaltSync(12);
+  const password = bcrypt.hashSync(passwordP, salt);
 
-    // Check username from database
-    const user = db.find((user) => user.username === username);
-    if (!user) {
-      return res.status(404).json({ error: "User not found!" });
-    }
-
-    // Compare password
-    const isValid = bcrypt.compareSync(password, user.password);
-    if (!isValid) {
-      return res.status(404).json({ error: "User not found!" });
-    }
-
-    req.user = user;
-
-    next();
-  },
-  (req, res) => {
-
-    res.redirect("/Admin");
+  await Usergame.create({ username, password }).then(result => console.log(usergame_id = result.id));
+  const userBiodata = await Userbiodata.create({usergame_id, firstname, lastname, email, phone, address });
+  res.json(userBiodata);
   }
 );
 
-// Protected Endpoint
-// route.get("/me", isAuthenticated, (req, res) => {
-//   req.log.info("Start getting user information");
-//   const user = db.find((user) => user.username === req.session.user.username);
-//   res.json(user);
-// });
-// route.get("/users", isAuthenticated, (req, res) => {
-//   res.json(db);
-// });
+// Get User
+route.get("/user", async (req, res) => {
+  const userGames = await Usergame.findAll({
+    include: [
+      {
+        model: Userbiodata
+      }
+    ]
+  });
+  res.json(userGames);
+});
+
+route.get("/user/:id", async (req, res) => {
+  const userGames = await Usergame.findOne({
+    where:{
+      id:req.params.id
+    },
+    include: [
+      {
+        model: Userbiodata
+      }
+    ]
+  });
+  res.json(userGames);
+});
 
 
+// Update Usergame
+route.put("/user/:id", async (req, res) => {
+  const { body } = req;
+  const userUpdate = await Usergame.update(body, {
+    where: {
+      id: req.params.id
+    }
+  });
+  res.json(userUpdate);
+});
+// Update Userbiodata
+route.put("/userbiodata/:id", async (req, res) => {
+  const { body } = req;
+  const userbiodataUpdate = await Userbiodata.update(body, {
+    where: {
+      id: req.params.id
+    }
+  });
+  res.json(userbiodataUpdate);
+});
 
-route.get("/", (req, res) => {
-  res.render("auth/form");
+// Delete Usergame
+route.delete("/user/:id", async (req, res) => {
+  const userDelete = await Usergame.destroy({
+    where: {
+      id: req.params.id
+    }
+  });
+  res.json(userDelete);
+});
+// Delete Userbiodata
+route.delete("/userbiodata/:id", async (req, res) => {
+  const userbioDelete = await Userbiodata.destroy({
+    where: {
+      id: req.params.id
+    }
+  });
+  res.json(userbioDelete);
 });
 
 

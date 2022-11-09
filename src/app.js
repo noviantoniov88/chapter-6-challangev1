@@ -3,6 +3,7 @@ const logger = require("pino-http");
 const dotenv = require("dotenv");
 const path = require("path");
 const webRoute = require("./web-route");
+const route = require("./route");
 
 module.exports = (app)=>{
     dotenv.config();
@@ -18,6 +19,7 @@ module.exports = (app)=>{
     app.use(express.urlencoded({ extended: true }));
 
     app.use(webRoute);
+    app.use("/api/v1/", route);
 
     return app;
 }
