@@ -86,5 +86,4 @@ route.delete("/userbiodata/:id", async (req, res) => {
   res.json(userbioDelete);
 });
 
-
 module.exports = route;
